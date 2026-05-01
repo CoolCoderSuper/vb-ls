@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>VbLs</RootNamespace>
+    <Description>VisualBasic language server</Description>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>vb-ls</ToolCommandName>
+    <Authors>Joseph Guenther</Authors>
+    <Version>0.4.0</Version>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <PackageId>vb-ls</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>vb;lsp;roslyn</PackageTags>
+    <PackageProjectUrl>https://github.com/CoolCoderSuper/vb-ls</PackageProjectUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RoslynRoot>$(MSBuildProjectDirectory)\..\roslyn</RoslynRoot>
+    <RoslynLanguageServerProjectRelative>src\LanguageServer\Microsoft.CodeAnalysis.LanguageServer\Microsoft.CodeAnalysis.LanguageServer.csproj</RoslynLanguageServerProjectRelative>
+    <RoslynLanguageServerProject>$(RoslynRoot)\src\LanguageServer\Microsoft.CodeAnalysis.LanguageServer\Microsoft.CodeAnalysis.LanguageServer.csproj</RoslynLanguageServerProject>
+    <RoslynLanguageServerPackagePath>tools\$(TargetFramework)\any\roslyn-lsp\</RoslynLanguageServerPackagePath>
+    <RoslynLanguageServerOutputDir>$(RoslynRoot)\artifacts\bin\Microsoft.CodeAnalysis.LanguageServer\$(Configuration)\net10.0\</RoslynLanguageServerOutputDir>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);BuildRoslynLanguageServer</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <Target Name="BuildRoslynLanguageServer">
+    <Error Condition="!Exists('$(RoslynLanguageServerProject)')" Text="Roslyn language server project was not found at '$(RoslynLanguageServerProject)'. Run ..\update-roslyn.ps1 first." />
+
+    <Exec
+      Condition="'$(OS)' == 'Windows_NT'"
+      WorkingDirectory="$(RoslynRoot)"
+      Command="&quot;$(RoslynRoot)\Restore.cmd&quot;" />
+
+    <Exec
+      Condition="'$(OS)' != 'Windows_NT'"
+      WorkingDirectory="$(RoslynRoot)"
+      Command="&quot;$(RoslynRoot)/restore.sh&quot;" />
+
+    <Exec
+      Condition="'$(OS)' == 'Windows_NT'"
+      WorkingDirectory="$(RoslynRoot)"
+      Command="&quot;$(RoslynRoot)\eng\common\dotnet.cmd&quot; build &quot;$(RoslynLanguageServerProject)&quot; -c $(Configuration) --no-restore -v:minimal" />
+
+    <Exec
+      Condition="'$(OS)' != 'Windows_NT'"
+      WorkingDirectory="$(RoslynRoot)"
+      Command="&quot;$(RoslynRoot)/eng/common/dotnet.sh&quot; build &quot;$(RoslynLanguageServerProject)&quot; -c $(Configuration) --no-restore -v:minimal" />
+
+    <Error Condition="!Exists('$(RoslynLanguageServerOutputDir)')" Text="Roslyn language server output was not found at '$(RoslynLanguageServerOutputDir)'." />
+
+    <ItemGroup>
+      <RoslynLanguageServerFiles Include="$(RoslynLanguageServerOutputDir)**\*.*" />
+      <TfmSpecificPackageFile Include="@(RoslynLanguageServerFiles)" PackagePath="$(RoslynLanguageServerPackagePath)%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
+</Project>
