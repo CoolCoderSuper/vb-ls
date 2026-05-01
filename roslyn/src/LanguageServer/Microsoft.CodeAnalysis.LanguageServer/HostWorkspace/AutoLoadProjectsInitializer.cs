@@ -86,6 +86,7 @@ internal sealed class AutoLoadProjectsInitializer(
             if (TryGetFolderPath(folder, _logger, out var folderPath))
             {
                 projectFiles.AddRange(Directory.EnumerateFiles(folderPath, "*.csproj", SearchOption.AllDirectories));
+                projectFiles.AddRange(Directory.EnumerateFiles(folderPath, "*.vbproj", SearchOption.AllDirectories));
             }
         }
 

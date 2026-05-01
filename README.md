@@ -29,6 +29,7 @@ vim.lsp.config['vb_ls'] = {
         '--extensionLogDirectory',
         vim.fs.joinpath(vim.uv.os_tmpdir(), 'roslyn_ls', 'logs'),
         '--stdio',
+        '--autoLoadProjects',
     },
     filetypes = { 'cs', 'vbnet' },
     root_dir = function(bufnr, cb)
@@ -46,29 +47,6 @@ vim.lsp.config['vb_ls'] = {
             cb(root_dir)
         end
     end,
-    on_init = {
-        function(client)
-            local root_dir = client.config.root_dir
-
-            for entry, type in vim.fs.dir(root_dir) do
-                if type == 'file' and (vim.endswith(entry, '.sln') or vim.endswith(entry, '.slnx')) then
-                    roslyn_open_solution(client, vim.fs.joinpath(root_dir, entry))
-                    return
-                end
-            end
-
-            local project_files = {}
-            for entry, type in vim.fs.dir(root_dir) do
-                if type == 'file' and (vim.endswith(entry, '.csproj') or vim.endswith(entry, '.vbproj')) then
-                    table.insert(project_files, vim.fs.joinpath(root_dir, entry))
-                end
-            end
-
-            if not vim.tbl_isempty(project_files) then
-                roslyn_open_projects(client, project_files)
-            end
-        end,
-    },
     settings = {
         ['csharp|background_analysis'] = {
             dotnet_analyzer_diagnostics_scope = 'fullSolution',
