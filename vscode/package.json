@@ -1,0 +1,101 @@
+{
+    "name": "vscode-vb-ls",
+    "displayName": "vscode-vb-ls",
+    "description": "VS Code integration for the vb-ls language server and VB.NET grammar support.",
+    "publisher": "CoolCoderSuper",
+    "version": "0.4.0",
+    "engines": {
+        "vscode": "^1.74.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/CoolCoderSuper/vb-ls"
+    },
+    "categories": [],
+    "activationEvents": [
+        "onLanguage:vbnet",
+        "onLanguage:csharp"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "vbnet",
+                "extensions": [
+                    ".vb"
+                ],
+                "aliases": [
+                    "Visual Basic .NET",
+                    "vbnet"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "vbnet",
+                "scopeName": "source.vbnet",
+                "path": "./syntaxes/vbnet.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "vbnet",
+                "path": "./snippets/vbnet.json"
+            }
+        ],
+        "configuration": [
+            {
+                "title": "vb-ls",
+                "properties": {
+                    "vb-ls.server.path": {
+                        "type": "string",
+                        "default": "vb-ls",
+                        "description": "Path to vb-ls language server."
+                    },
+                    "vb-ls.solution.path": {
+                        "type": "string",
+                        "default": null,
+                        "description": "Path to a solution file to open. When omitted, vb-ls auto-opens a single workspace solution or all C#/VB projects."
+                    },
+                    "vb-ls.autoOpenProjects": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Automatically open workspace solution or project files after the language server starts."
+                    },
+                    "vb-ls.extensionLogDirectory": {
+                        "type": "string",
+                        "default": null,
+                        "description": "Directory for vb-ls extension logs."
+                    }
+                }
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "package": "vsce package",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/glob": "^8.0.0",
+        "@types/mocha": "^10.0.1",
+        "@types/node": "16.x",
+        "@types/vscode": "^1.74.0",
+        "@typescript-eslint/eslint-plugin": "^5.45.0",
+        "@typescript-eslint/parser": "^5.45.0",
+        "@vscode/test-electron": "^2.2.0",
+        "@vscode/vsce": "^3.9.1",
+        "eslint": "^8.28.0",
+        "glob": "^8.0.3",
+        "mocha": "^10.1.0",
+        "typescript": "^4.9.3"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^8.0.0"
+    }
+}
