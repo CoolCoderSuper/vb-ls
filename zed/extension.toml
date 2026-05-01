@@ -1,0 +1,15 @@
+id = "vb-ls"
+name = "Visual Basic"
+version = "0.1.0"
+schema_version = 1
+authors = ["Joseph Guenther"]
+description = "Visual Basic .NET language support powered by vb-ls."
+repository = "https://github.com/CoolCoderSuper/vb-ls"
+
+[grammars.vb]
+repository = "https://github.com/CoolCoderSuper/tree-sitter-vb"
+rev = "a68e696be82ad2d1e32ac20b039a7123e74b8beb"
+
+[language_servers.vb-ls]
+name = "vb-ls"
+languages = ["Visual Basic .NET"]

@@ -1,0 +1,13 @@
+name = "Visual Basic .NET"
+grammar = "vb"
+path_suffixes = ["vb"]
+line_comments = ["'"]
+tab_size = 4
+
+brackets = [
+    { start = "{", end = "}", close = true, newline = true },
+    { start = "[", end = "]", close = true, newline = false },
+    { start = "(", end = ")", close = true, newline = false },
+    { start = "<", end = ">", close = false, newline = false },
+    { start = "\"", end = "\"", close = true, newline = false },
+]
