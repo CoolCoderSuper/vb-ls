@@ -87,3 +87,30 @@ vbnet filetype and improved syntax highlighting.
 
 ## Visual Studio Code
 See [vscode-vb-ls](https://marketplace.visualstudio.com/items?itemName=CoolCoderSuper.vscode-vb-ls).
+
+## GitHub Copilot CLI
+The following configuration could be added to `~/.copilot/lsp-config.json` (`%USERPROFILE%\.copilot\lsp-config.json` on Windows) or in the repository root in `.github\lsp.json`:
+```json
+{
+    "lspServers": {
+        "vb_ls": {
+            "command": "vb-ls",
+            "args": [
+                "--logLevel",
+                "Information",
+                "--extensionLogDirectory",
+                "${TEMP}/roslyn_ls/logs",
+                "--stdio",
+                "--autoLoadProjects"
+            ],
+            "fileExtensions": {
+                ".cs": "csharp",
+                ".vb": "vbnet"
+            },
+            "warmupTimeoutMs": 120000
+        }
+    }
+}
+```
+
+
